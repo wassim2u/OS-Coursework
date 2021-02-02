@@ -85,7 +85,6 @@ public:
 		//By safe, we mean that we can read without any process interruption and any violation.
 		//In addition, this is to allow the hardware time we store to be accurately reflected when we call /usr/date.
 		UniqueIRQLock var;
-		syslog.messagef(LogLevel::DEBUG, "Interrupts Disabled");
 
 		uint8_t status_bit = get_update_in_progress_flag();
 		//If the flag is set, meaning an update is in progress, we will wait until it is cleared first before we consider when to read the registers.
@@ -139,11 +138,8 @@ public:
 		tp.day_of_month = day_of_month;
 		tp.month = month;
 		tp.year=year;
-		syslog.messagef(LogLevel::DEBUG, "TP Structure Populated Successfully");
 	
 		
-
-		syslog.messagef(LogLevel::DEBUG, "Interrupts Enabled");
 	}
 };
 
