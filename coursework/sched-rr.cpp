@@ -12,6 +12,7 @@
 #include <infos/util/list.h>
 #include <infos/util/lock.h>
 
+
 using namespace infos::kernel;
 using namespace infos::util;
 
@@ -32,7 +33,10 @@ public:
 	 */
 	void add_to_runqueue(SchedulingEntity& entity) override
 	{
-		not_implemented();
+		//Interrupts should be disabled when manipulating the runqueue. There will be no need to handle any errors of resource leaks
+		//as the RAII wrapper helps deconstruct the l variable at the end of the lifetime of the function.
+		UniqueIRQLock l;
+		runqueue.enqueue(&entity); //appends entity to end of list
 	}
 
 	/**
@@ -41,7 +45,10 @@ public:
 	 */
 	void remove_from_runqueue(SchedulingEntity& entity) override
 	{
-		not_implemented();
+		//Interrupts should be disabled when manipulating the runqueue. There will be no need to handle any errors of resource leaks
+		//as the RAII wrapper helps deconstruct the l variable at the end of the lifetime of the function.
+		UniqueIRQLock l;
+		runqueue.remove(&entity); //removes entitiy
 	}
 
 	/**
@@ -51,7 +58,20 @@ public:
 	 */
 	SchedulingEntity *pick_next_entity() override
 	{
-		not_implemented();
+		
+		if (runqueue.count() == 0) return NULL; //Returned when there are no entities in runqueue.
+
+		if (runqueue.count() == 1) return runqueue.first(); //Return the only entity in runqueue.
+
+		 //When a new task is to be picked for execution, it is removed from the front of the list, and placed at the back.  
+		 // Then, this task is allowed to run for its timeslice.
+		auto entity = runqueue.first(); 
+		runqueue.remove(entity); 
+		runqueue.append(entity);
+		return entity;
+	
+
+
 	}
 
 private:
