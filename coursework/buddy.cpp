@@ -304,7 +304,7 @@ public:
 			while(block_pointer  && current_order < MAX_ORDER) {
 				
 				//If the block we are pointing to is not the block's buddy, we will iterate through the blocks in the current order to find the buddy.	
-				//Loop ends if we reach NULL, which happens when we could not find the inserted block's buddy because it is not free
+				//Loop ends if we reach NULL, which happens when we could not find the inserted block's buddy (perhaps it is not free)
 				if (block_inserted_buddy != block_pointer) {
 					
 					//Point to the next block in the current order
@@ -344,7 +344,7 @@ public:
 		//Point to the first block in the current order
 		PageDescriptor* block_with_pgd = _free_areas[current_order];
 
-		//First, find where the page descriptor starting from max_order and by traversing every block in each order.
+		//First, find where the page descriptor is starting from max_order and by traversing every block in each order.
 		//Loop ends once we find it, or if we reach order below 0 (meaning we probably havent found it)
 		bool found_pgd = false;
 		while(!found_pgd && current_order>=0){
@@ -440,7 +440,6 @@ public:
 
 
 	
-	
 	/**
 	 * Initialises the allocation algorithm.
 	 * @return Returns TRUE if the algorithm was successfully initialised, FALSE otherwise.
@@ -451,31 +450,49 @@ public:
 		//Initialise at the highest order
 		int highest_order = MAX_ORDER ;
 
-		auto number_of_pages = pages_per_block(highest_order); //number of pages per block
-		int number_of_blocks = nr_page_descriptors / number_of_pages; //Number of blocks in highest order
-
-		PageDescriptor *pgd = page_descriptors;
-	
-		//Initialise element in the highest order of free_areas to be the pointer to the first page descriptor provided
-		_free_areas[highest_order] = pgd;
+		int number_of_blocks = nr_page_descriptors / pages_per_block(highest_order); //Number of blocks in highest order
+		int remainder = nr_page_descriptors %pages_per_block(highest_order); //To check whether the highest order can contain all the pages
+		uint64_t pages_added =0; //To keep count of number of pages isnerted
+		
 		
 		int block_index = 0;
+		//Iterate through the number of blocks 
 		while(block_index < number_of_blocks) {
 	
-			//Point the next page descriptor to the next block; Increment by number of pages in a block
-			pgd->next_free = pgd + number_of_pages;
-						
-			//Move to the next pointer and increment block_index
-			pgd = pgd->next_free; 
+			//Insert the block, by taking the first page descriptor for that block to be the initial page_descriptors incremented by number of pages added so far
+			insert_block(page_descriptors+pages_added, highest_order);
+			//Update the amount of pages added
+			pages_added+= pages_per_block(highest_order);
+			//Increment block index
 			block_index++;
 		}
 
-		
-		//The final block will be linked to NULL
-		pgd->next_free = NULL;
-		
+		//If nr_page_descriptors is not divisible by pages_per_block in the highest order MAX_ORDER, then we will store the remaining pages accordingly in the lower orders
+		if (remainder!=0){
+			int current_order = highest_order;
+			//Loop finishes once pages_added reaches the number of page descriptors to store or order value is now below 0 (an indication of failure to store all values) 
+			while(pages_added < nr_page_descriptors && current_order>=0){
+				//Check to see how many pages can fit in this order
+				int difference = remainder - pages_per_block(current_order);
+				//If the difference is positive, that means that we can store the pages in the current order
+				if (difference>=0){
+					insert_block(page_descriptors+pages_added, current_order);
+					pages_added += pages_per_block(current_order);
+					//Update the remainder to reflect the amount of pages left
+					remainder = difference;
+				}
+				else{
+					current_order--;
+				}			
 
-		return true;
+			}
+
+		}
+		
+		//Return True if the number of inserted pages equals with the amount of page descriptors that we were initially told that we should store
+		//Otherwise, returns false
+		return pages_added == nr_page_descriptors;
+
 
 	}
 

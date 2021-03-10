@@ -2,6 +2,7 @@
     "files.associations": {
         "ratio": "cpp",
         "*.tcc": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "cmath": "cpp"
     }
 }
