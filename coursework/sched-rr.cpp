@@ -4,7 +4,7 @@
  */
 
 /*
- * STUDENT NUMBER: s
+ * STUDENT NUMBER: s1870697
  */
 #include <infos/kernel/sched.h>
 #include <infos/kernel/thread.h>
@@ -62,9 +62,13 @@ public:
 		if (runqueue.count() == 0) return NULL; //Returned when there are no entities in runqueue.
 
 		if (runqueue.count() == 1) return runqueue.first(); //Return the only entity in runqueue.
-
-		 //When a new task is to be picked for execution, it is removed from the front of the list, and placed at the back.  
-		 // Then, this task is allowed to run for its timeslice.
+		
+        //Interrupts should be disabled when manipulating the runqueue. There will be no need to handle any errors of resource leaks
+		//as the RAII wrapper helps deconstruct the l variable at the end of the lifetime of the function.
+		UniqueIRQLock l;
+		
+		//When a new task is to be picked for execution, it is removed from the front of the list, and placed at the back.  
+		// Then, this task is allowed to run for its timeslice.
 		auto entity = runqueue.first(); 
 		runqueue.remove(entity); 
 		runqueue.append(entity);
