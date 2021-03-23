@@ -4,7 +4,7 @@
  */
 
 /*
- * STUDENT NUMBER: s
+ * STUDENT NUMBER: s1870697
  */
 #ifndef TARFS_H
 #define TARFS_H
@@ -54,6 +54,11 @@ namespace tarfs {
 		}
 
 		TarFSNode *_root_node;
+
+		//Student-defined:
+		int get_number_of_data_blocks(posix_header* header, size_t block_size);
+		bool check_end_of_archive(int block_index, size_t nr_blocks, size_t block_size);
+
 	};
 
 	class TarFSFile : public infos::fs::File {

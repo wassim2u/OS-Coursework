@@ -3,6 +3,14 @@
         "ratio": "cpp",
         "*.tcc": "cpp",
         "string": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "typeinfo": "cpp",
+        "chrono": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "algorithm": "cpp"
     }
 }
