@@ -20,6 +20,8 @@
 #include <infos/util/map.h>
 #include <infos/util/list.h>
 
+#define DIRECTORY_FLAG '5'
+
 namespace tarfs {
 
 	class TarFSNode;

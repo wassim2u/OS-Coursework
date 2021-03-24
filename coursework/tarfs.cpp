@@ -227,9 +227,10 @@ TarFSNode* TarFS::build_tree()
 				if (header->typeflag!=DIRECTORY_FLAG && nodes_count == index + 1 ){
 					//Sets where the block header of the file is 
 					child->set_block_offset(block_index);
-					child->size(octal2ui(header->size));
+				}	
+				//Set the corresponding size
+				child->size(octal2ui(header->size));	
 
-				}				
 				index++;
 			}
 			else { 	
