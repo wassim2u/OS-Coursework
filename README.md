@@ -22,13 +22,20 @@ https://github.com/tspink/infos-user
 
 Here are some commands to get you started:
 
-` git clone https://github.com/tspink/infos`
+`git clone https://github.com/tspink/infos`
+
 ` git clone https://github.com/tspink/infos-user `
+
 ` cd infos `
+
 ` make `
+
 ` cd ../infos-user `
+
 ` make `
+
 ` make fs `
+
 ` qemu-system-x86_64 -m 8G \
   -kernel ../infos/out/infos-kernel \
   -debugcon stdio \
