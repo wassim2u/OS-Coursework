@@ -22,18 +22,18 @@ https://github.com/tspink/infos-user
 
 Here are some commands to get you started:
 
-# git clone https://github.com/tspink/infos
-# git clone https://github.com/tspink/infos-user
-# cd infos
-# make
-# cd ../infos-user
-# make
-# make fs
-# qemu-system-x86_64 -m 8G \
+` git clone https://github.com/tspink/infos`
+` git clone https://github.com/tspink/infos-user `
+` cd infos `
+` make `
+` cd ../infos-user `
+` make `
+` make fs `
+` qemu-system-x86_64 -m 8G \
   -kernel ../infos/out/infos-kernel \
   -debugcon stdio \
   -hda bin/rootfs.tar \
-  -append 'pgalloc.debug=0 pgalloc.algorithm=simple objalloc.debug=0 sched.debug=0 sched.algorithm=cfs syslog=serial boot-device=ata0 init=/usr/init'
+  -append 'pgalloc.debug=0 pgalloc.algorithm=simple objalloc.debug=0 sched.debug=0 sched.algorithm=cfs syslog=serial boot-device=ata0 init=/usr/init' `
 
 This should boot InfOS in QEMU, starting the example user-space.
 
