@@ -41,3 +41,5 @@ Since this project was created for a course at the University of Edinburgh,
 it is /moderately/ bespoke, although it is technically a general purpose
 operating system.  If you are interested in the coursework, get in touch
 and I can supply the documentation!
+
+tspink@inf.ed.ac.uk
